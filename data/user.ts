@@ -25,3 +25,18 @@ export const getUserById = async (id: string) => {
     console.log("Error in getUserById", error);
   }
 };
+
+export const createUser = async (data: {
+  email: string;
+  password: string;
+  name: string;
+}) => {
+  try {
+    const user = await db.user.create({
+      data,
+    });
+    return user;
+  } catch (error) {
+    console.log("Error in createUser", error);
+  }
+};
