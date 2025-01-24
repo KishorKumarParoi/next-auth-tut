@@ -44,7 +44,7 @@ const RegisterForm = () => {
           setError(data?.error);
           setSuccess(null);
         } else {
-          setSuccess("Login successful");
+          setSuccess(data?.success ?? null);
           setError(null);
         }
       });
