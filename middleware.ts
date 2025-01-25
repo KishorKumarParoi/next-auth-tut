@@ -2,7 +2,6 @@ import { auth } from "./auth";
 
 export default auth((req) => {
   console.log("Middleware invoked");
-  console.log("Request: ", req);
   console.log("Route: ", req.nextUrl.pathname);
 });
 
