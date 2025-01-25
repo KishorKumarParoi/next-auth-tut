@@ -1,10 +1,9 @@
 import * as bcrypt from "bcryptjs";
-import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getUserByEmail } from "./data/user";
 import { LoginSchema } from "./schemas";
 
-const authConfig: NextAuthConfig = {
+const authConfig = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
