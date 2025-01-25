@@ -1,4 +1,3 @@
-import { db } from "lib/db";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -18,9 +17,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const users = await db.user.findMany();
-  console.log(users);
-
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>{children}</body>
