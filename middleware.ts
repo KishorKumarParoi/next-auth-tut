@@ -1,13 +1,9 @@
 import { auth } from "./auth";
 
 export default auth((req) => {
-  // req.auth
-  console.log("Middleware Invoked");
+  console.log("Middleware invoked");
   console.log("Request: ", req);
   console.log("Route: ", req.nextUrl.pathname);
-
-  const isLoggedIn = !!req.auth;
-  console.log("Is logged in: ", isLoggedIn);
 });
 
 // Optionally, don't invoke Middleware on some paths

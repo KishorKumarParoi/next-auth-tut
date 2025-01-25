@@ -40,3 +40,20 @@ export const createUser = async (data: {
     console.log("Error in createUser", error);
   }
 };
+
+export const getUserByEmailAndPassword = async (
+  email: string,
+  password: string
+) => {
+  try {
+    const user = await db.user.findFirst({
+      where: {
+        email,
+        password,
+      },
+    });
+    return user;
+  } catch (error) {
+    console.log("Error in getUserByEmailAndPassword", error);
+  }
+};

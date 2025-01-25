@@ -8,7 +8,7 @@ const font = Poppins({
   weight: ["600"],
 });
 
-const Home = () => {
+const Home = async () => {
   return (
     <main
       className="flex h-full flex-col justify-center items-center 
