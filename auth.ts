@@ -6,15 +6,32 @@ import { getUserById } from "./data/user";
 import { db } from "./lib/db";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(db),
+  session: { strategy: "jwt" },
+  ...authConfig,
   callbacks: {
-    async signIn({ user }) {
-      const existingUser = await getUserById(user.id);
+    // async signIn({ user }) {
+    // const existingUser = await getUserById(user.id);
 
-      if (!existingUser || !existingUser.emailVerified) {
-        return false;
-      }
+    // if (!existingUser || !existingUser.emailVerified) {
+    //   return false;
+    // }
 
-      return true;
+    //   return true;
+    // },
+    pages: {
+      signIn: "/auth/login",
+      error: "/auth/error",
+    },
+    async linkAccount({ user }) {
+      await db.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          emailVerified: new Date(),
+        },
+      });
     },
     async session({ session, token }) {
       console.log({ sessionToken: token });
@@ -45,7 +62,4 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return token;
     },
   },
-  adapter: PrismaAdapter(db),
-  session: { strategy: "jwt" },
-  ...authConfig,
 });

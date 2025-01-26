@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/form";
 import { LoginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -20,6 +21,12 @@ import { Input } from "../ui/input";
 import CardWrapper from "./CardWrapper";
 
 const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use with different Provider"
+      : "";
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -39,13 +46,9 @@ const LoginForm = () => {
     // Start a transition to indicate that the form is submitting
     startTransition(() => {
       login(values).then((data) => {
-        if (data?.error) {
-          setError(data?.error);
-          setSuccess(null);
-        } else {
-          setSuccess("Login successful");
-          setError(null);
-        }
+        setError(data?.error ?? null);
+        // TODO: Add a success message after email verification
+        // setSuccess(data.success);
       });
     });
   };
@@ -100,7 +103,7 @@ const LoginForm = () => {
               )}
             />
             <FormSuccess message={success || undefined} />
-            <FormError message={error || undefined} />
+            <FormError message={error || urlError} />
             <Button type="submit" className="w-full" disabled={isPending}>
               Login
             </Button>
