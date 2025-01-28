@@ -25,10 +25,14 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     return { error: "Email doesn't exist" };
   }
 
+  console.log("existingUser", existingUser);
+
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(
       existingUser.email
     );
+
+    console.log("verificationToken", verificationToken);
 
     return {
       success: "Confirmation E-mail Sent",
