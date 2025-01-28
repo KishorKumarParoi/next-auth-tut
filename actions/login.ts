@@ -38,6 +38,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       success: "Confirmation E-mail Sent",
     };
   }
+
   try {
     await signIn("credentials", {
       email,
