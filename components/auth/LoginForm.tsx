@@ -47,8 +47,7 @@ const LoginForm = () => {
     startTransition(() => {
       login(values).then((data) => {
         setError(data?.error ?? null);
-        // TODO: Add a success message after email verification
-        // setSuccess(data.success);
+        setSuccess(data?.success ?? null);
       });
     });
   };
