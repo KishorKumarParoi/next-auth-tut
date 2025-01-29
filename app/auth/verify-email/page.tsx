@@ -1,10 +1,12 @@
+import VerificationForm from "@/components/auth/VerificationForm";
+
 interface VerifyEmailPageProps {
   slug: string;
 }
 
 const VerifyEmailPage = ({ slug }: VerifyEmailPageProps) => {
   console.log(slug);
-  return <div>VerifyEmailPage: Kishor {slug}</div>;
+  return <VerificationForm />;
 };
 
 export default VerifyEmailPage;
