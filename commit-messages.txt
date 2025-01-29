@@ -1,0 +1,33 @@
+Here are some industry-standard Git commit message headlines that follow best practices:
+
+1. **Feature Addition**:
+   feat: add user registration functionality
+
+2. **Bug Fix**:
+   fix: resolve issue with user login validation
+
+3. **Documentation Update**:
+   docs: update README with setup instructions
+
+4. **Style Changes** (formatting, missing semi-colons, etc.):
+   style: format code according to ESLint rules
+
+5. **Refactoring Code**:
+   refactor: simplify user authentication logic
+
+6. **Performance Improvement**:
+   perf: optimize database queries for user data
+
+7. **Test Addition or Update**:
+   test: add unit tests for registration function
+
+8. **Build System Changes**:
+   build: update webpack configuration
+
+9. **Continuous Integration**:
+   ci: add GitHub Actions workflow for CI
+
+10. **Chore** (updating grunt tasks, etc.):
+    chore: update dependencies to latest versions
+
+These commit message headlines follow the conventional commits specification, which helps in maintaining a consistent and meaningful commit history.

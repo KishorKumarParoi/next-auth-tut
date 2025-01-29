@@ -8,7 +8,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
   try {
     const { data, error } = await resend.emails.send({
       from: "Acme <onboarding@resend.dev>",
-      to: "1703053@student.ruet.ac.bd",
+      to: email,
       subject: "Confirm your email",
       html: `<p>Click <a href="${confirmLink}">here</a> to confirm your email</p>`,
     });
@@ -17,5 +17,23 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     return { data, error };
   } catch (error) {
     console.error("sendVerificationEmail", error);
+  }
+};
+
+export const sendPasswordResetEmail = async (email: string, token: string) => {
+  const resetLink = `${process.env.BASE_URL}/auth/reset-password?token=${token}`;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "Acme <onboarding@resend.dev>",
+      to: email,
+      subject: "Reset your password",
+      html: `<p>Click <a href="${resetLink}">here</a> to reset password</p>`,
+    });
+    console.log("sendPasswordResetEmail", { data, error });
+    return { data, error };
+  } catch (error) {
+    console.error("sendPasswordResetEmail", error);
+    return { error };
   }
 };
