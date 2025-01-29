@@ -2,6 +2,7 @@
 
 import { signIn } from "@/auth";
 import { getUserByEmail } from "@/data/user";
+import { sendVerificationEmail } from "@/lib/mail";
 import { generateVerificationToken } from "@/lib/token";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
@@ -33,6 +34,19 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     );
 
     console.log("verificationToken", verificationToken);
+
+    const result = await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token
+    );
+
+    if (result?.data) {
+      console.log("sendVerificationEmail", { data: result.data });
+    }
+
+    if (result?.error) {
+      return { error: "Something went wrong!" };
+    }
 
     return {
       success: "Confirmation E-mail Sent",

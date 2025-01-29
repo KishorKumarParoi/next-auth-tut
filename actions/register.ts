@@ -1,5 +1,6 @@
 "use server";
 
+import { sendVerificationEmail } from "@/lib/mail";
 import { generateVerificationToken } from "@/lib/token";
 import * as bcrypt from "bcryptjs";
 import { z } from "zod";
@@ -28,7 +29,18 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const verificationToken = await generateVerificationToken(email);
   console.log("verificationToken", verificationToken);
 
-  // TODO: Send verification email
+  const result = await sendVerificationEmail(
+    verificationToken.email,
+    verificationToken.token
+  );
+
+  if (result?.data) {
+    console.log("sendVerificationEmail", { data: result.data });
+  }
+
+  if (result?.error) {
+    return { error: "Something went wrong!" };
+  }
 
   return { success: "Confirmation Email Sent" };
 };
