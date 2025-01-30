@@ -24,7 +24,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       console.log({ existingUser });
 
-      // TODO: Add 2FA
+      // Check if user has two-factor enabled
       if (existingUser?.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
           existingUser.id

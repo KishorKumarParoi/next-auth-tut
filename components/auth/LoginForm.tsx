@@ -86,10 +86,9 @@ const LoginForm = () => {
                 name="code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Two Factor Code</FormLabel>
                     <FormControl>
                       <Input
-                        type="code"
                         placeholder="123456"
                         {...field}
                         disabled={isPending}

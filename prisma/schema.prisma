@@ -54,8 +54,7 @@ model User {
   isTwoFactorEnabled    Boolean                @default(false) @map("is_two_factor_enabled")
   twoFactorConfirmation TwoFactorConfirmation?
   createdAt             DateTime               @default(now()) @map("created_at")
-  TwoFactorToken        TwoFactorToken?        @relation(fields: [twoFactorTokenId], references: [id])
-  twoFactorTokenId      String?
+  updatedAt             DateTime               @default(now()) @updatedAt @map("updated_at")
 
   @@map("users")
 }
@@ -86,6 +85,7 @@ model TwoFactorConfirmation {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
+  @@map("two_factor_confirmations")
 }
 
 model TwoFactorToken {
@@ -93,7 +93,6 @@ model TwoFactorToken {
   email   String
   token   String   @unique
   expires DateTime
-  User    User[]
 
   @@unique([email, token])
   @@map("two_factor_tokens")
