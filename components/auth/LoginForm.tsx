@@ -89,10 +89,11 @@ const LoginForm = () => {
                     <FormLabel>Two Factor Code</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="123456"
+                        type="text"
                         {...field}
-                        disabled={isPending}
                         className="block w-full"
+                        placeholder="123456"
+                        disabled={isPending}
                       />
                     </FormControl>
                     <FormMessage />
