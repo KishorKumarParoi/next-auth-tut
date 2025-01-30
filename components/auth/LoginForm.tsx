@@ -65,7 +65,9 @@ const LoginForm = () => {
         })
         .catch((error) => {
           console.error("Error on form submission using 2FA", error);
-          setError("Something went wrong on form submission");
+          // TODO: Handle error on form submission
+          // setError("Something went wrong on form submission");
+          return null;
         });
     });
   };
@@ -91,6 +93,7 @@ const LoginForm = () => {
                       <Input
                         type="text"
                         {...field}
+                        value={field.value || ""}
                         className="block w-full"
                         placeholder="123456"
                         disabled={isPending}
