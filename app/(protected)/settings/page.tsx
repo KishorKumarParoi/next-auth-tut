@@ -1,29 +1,44 @@
 "use client";
-import { logout } from "@/actions/logout";
+import { settings } from "@/actions/settings";
 import { Button } from "@/components/ui/button";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { Card, CardHeader } from "@/components/ui/card";
+import { useSession } from "next-auth/react";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
 const Settings = () => {
-  const user = useCurrentUser();
-  console.log("user: ", user);
+  const [isPending, startTransition] = useTransition();
+  const { update } = useSession();
 
   const onClick = () => {
-    logout();
+    startTransition(() => {
+      settings({ name: "Kishor Kumar Paroi" })
+        .then(() => {
+          update();
+        })
+        .then(() => {
+          toast.success("Settings Updated!");
+        })
+        .catch(() => {
+          toast.error("An error occurred while updating settings");
+        });
+    });
   };
 
   return (
-    <div className="bg-white p-10 rounded-xl shadow-md">
-      {/* <p className="p-2">{JSON.stringify(user, null, 2)}</p> */}
+    <Card className="w-[600px]">
+      <CardHeader>
+        <p className="text-2xl font-semibold text-center">🎮 Settings</p>
+      </CardHeader>
       <Button
-        type="submit"
+        disabled={isPending}
         variant={"destructive"}
-        size="default"
-        className="p-2 cursor-pointer"
+        className="text-center mx-auto flex justify-center items-center"
         onClick={onClick}
       >
-        Sign Out
+        Update Name
       </Button>
-    </div>
+    </Card>
   );
 };
 
