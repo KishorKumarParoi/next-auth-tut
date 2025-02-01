@@ -42,7 +42,6 @@ export const SettingsSchema = z
     password: z.optional(z.string().min(6)),
     newPassword: z.optional(z.string().min(6)),
     isTwoFactorEnabled: z.optional(z.boolean()),
-    isEmailVerified: z.optional(z.boolean()),
     role: z.enum([UserRole.ADMIN, UserRole.USER, UserRole.MANAGER]),
   })
   .refine(
@@ -67,21 +66,5 @@ export const SettingsSchema = z
     {
       message: "Password is required",
       path: ["password"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (
-        data.password &&
-        data.newPassword &&
-        data.password === data.newPassword
-      ) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message: "Password and new password should not be same",
-      path: ["newPassword"],
     }
   );

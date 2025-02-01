@@ -2,15 +2,19 @@
 
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "../ui/button";
 
 const Social = () => {
+  const SearchParams = useSearchParams();
+  const callbackUrl = SearchParams.get("callbackUrl") || "";
+
   const onClick = (provider: "google" | "github") => {
     console.log(`${provider} login clicked`);
     signIn(provider, {
-      callbackUrl: DEFAULT_LOGIN_REDIRECT,
+      callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
   };
   return (

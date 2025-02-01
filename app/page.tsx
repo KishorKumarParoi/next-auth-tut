@@ -25,7 +25,7 @@ const Home = async () => {
         </h1>
         <p className="text-white text-lga">A Simple Authentication Service</p>
         <div>
-          <LoginButton>
+          <LoginButton mode="modal" asChild>
             <Button variant={"secondary"} size={"lg"}>
               Sign In
             </Button>

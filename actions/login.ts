@@ -12,7 +12,10 @@ import { AuthError } from "next-auth";
 import { z } from "zod";
 import { LoginSchema } from "../schemas";
 
-export const login = async (values: z.infer<typeof LoginSchema>) => {
+export const login = async (
+  values: z.infer<typeof LoginSchema>,
+  callbackUrl?: string
+) => {
   console.log("login action", values);
   const validateFields = LoginSchema.safeParse(values);
   console.log("validateFields", validateFields);
@@ -48,7 +51,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     }
 
     if (result?.error) {
-      return { error: "Something went wrong!" };
+      return { error: "Something went wrong! kkp" };
     }
 
     return {
@@ -111,7 +114,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
   } catch (error) {
     if (error instanceof AuthError) {

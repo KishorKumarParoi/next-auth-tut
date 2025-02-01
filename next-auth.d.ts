@@ -13,10 +13,8 @@ declare module "next-auth" {
   }
 }
 
-// import "@auth/core/jwt";
-
-// declare module "@auth/core/jwt" {
-//   interface JWT {
-//     role: UserRole;
-//   }
-// }
+declare module "next-auth/jwt" {
+  interface JWT {
+    userRole?: "USER";
+  }
+}
