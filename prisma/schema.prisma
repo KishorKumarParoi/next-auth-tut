@@ -51,6 +51,7 @@ model User {
   password              String?
   role                  UserRole               @default(USER)
   accounts              Account[]
+  isOAuth               Boolean                @default(false) @map("is_oauth")
   isTwoFactorEnabled    Boolean                @default(false) @map("is_two_factor_enabled")
   twoFactorConfirmation TwoFactorConfirmation?
   createdAt             DateTime               @default(now()) @map("created_at")

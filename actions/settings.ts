@@ -1,6 +1,6 @@
 "use server";
 
-import { getUserById } from "@/data/user";
+import { getUserByEmail, getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { SettingsSchema } from "@/schemas";
@@ -17,6 +17,21 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
 
   if (!dbUser) {
     return { error: "Unauthorized" };
+  }
+
+  if (user.isOAuth) {
+    values.email = undefined;
+    values.password = undefined;
+    values.newPassword = undefined;
+    values.isTwoFactorEnabled = undefined;
+  }
+
+  if (values.email && values.email !== dbUser.email) {
+    const existingUser = await getUserByEmail(values.email);
+
+    if (existingUser && existingUser.id !== dbUser.id) {
+      return { error: "Email is already in use" };
+    }
   }
 
   await db.user.update({

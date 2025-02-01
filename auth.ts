@@ -2,6 +2,7 @@ import authConfig from "@/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { UserRole } from "@prisma/client";
 import NextAuth from "next-auth";
+import { getAccountByUserId } from "./data/account";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
 import { getUserById } from "./data/user";
 import { db } from "./lib/db";
@@ -12,7 +13,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
   callbacks: {
     async signIn({ user, account }) {
-      console.log({ user, account });
+      console.log("[auth.ts:27] user", user);
+      console.log("[auth.ts:28] account", account);
 
       // Allow OAuth providers to sign in without email verification
       if (account?.provider !== "credentials") return true;
@@ -22,7 +24,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       // Prevent sign in if user is not verified
       if (!existingUser?.emailVerified) return false;
 
-      console.log({ existingUser });
+      console.log("[auth.ts:38] existingUser", existingUser);
 
       // Check if user has two-factor enabled
       if (existingUser?.isTwoFactorEnabled) {
@@ -30,7 +32,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           existingUser.id
         );
 
-        console.log({ twoFactorConfirmation });
+        console.log(
+          "[auth.ts:53] twoFactorConfirmation",
+          twoFactorConfirmation
+        );
 
         if (!twoFactorConfirmation) {
           return false;
@@ -61,7 +66,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       });
     },
     async session({ session, token }) {
-      console.log({ sessionToken: token });
+      console.log("[auth.ts:92] token", token);
+      console.log("[auth.ts:93] session", session);
 
       if (token.sub && session.user) {
         session.user.id = token.sub;
@@ -79,21 +85,44 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.image = token.image;
+        session.user.isOAuth = token.isOAuth as boolean;
       }
+
+      console.log("[auth.ts:94] newSession", session);
 
       return session;
     },
     async jwt({ token }) {
+      // Check if token is being created
       if (!token.sub) {
         return token;
       }
 
-      const existingUser = await getUserById(token.sub);
+      // check if token is an OAuth token
+      if (token.picture) {
+        token.isOAuth = true;
+      }
 
+      // console.log("[auth.ts:93] token", token);
+
+      // Check if user exists in the database
+      const existingUser = await getUserById(token.sub);
       if (!existingUser) {
         return token;
       }
 
+      // Check if user is an OAuth user
+      if (token.isOAuth) {
+        existingUser.isOAuth = true;
+      }
+
+      console.log("[auth.ts:100] existingUser", existingUser);
+
+      // Check if user has two-factor enabled
+      const existingAccount = await getAccountByUserId(existingUser.id);
+      console.log("[auth.ts:105] existingAccount", existingAccount);
+
+      token.isOAuth = existingUser.isOAuth;
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.image = existingUser.image;

@@ -1,3 +1,4 @@
+import { UserRole } from "@prisma/client";
 import { z } from "zod";
 
 export const LoginSchema = z.object({
@@ -34,6 +35,53 @@ export const newPasswordSchema = z.object({
   }),
 });
 
-export const SettingsSchema = z.object({
-  name: z.optional(z.string()),
-});
+export const SettingsSchema = z
+  .object({
+    name: z.optional(z.string()),
+    email: z.optional(z.string().email()),
+    password: z.optional(z.string().min(6)),
+    newPassword: z.optional(z.string().min(6)),
+    isTwoFactorEnabled: z.optional(z.boolean()),
+    isEmailVerified: z.optional(z.boolean()),
+    role: z.enum([UserRole.ADMIN, UserRole.USER, UserRole.MANAGER]),
+  })
+  .refine(
+    (data) => {
+      if (data.password && !data.newPassword) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "New password is required",
+      path: ["newPassword"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (!data.password && data.newPassword) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Password is required",
+      path: ["password"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (
+        data.password &&
+        data.newPassword &&
+        data.password === data.newPassword
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Password and new password should not be same",
+      path: ["newPassword"],
+    }
+  );
