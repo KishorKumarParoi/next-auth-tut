@@ -8,7 +8,6 @@ import { db } from "@/lib/db";
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "@/lib/mail";
 import { generateTwoFactorToken, generateVerificationToken } from "@/lib/token";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { AuthError } from "next-auth";
 import { z } from "zod";
 import { LoginSchema } from "../schemas";
 
@@ -24,7 +23,7 @@ export const login = async (
     return { error: "Invalid fields" };
   }
 
-  const { email, password, code } = validateFields.data;
+  const { email, code } = validateFields.data;
 
   const existingUser = await getUserByEmail(email);
 
@@ -110,24 +109,17 @@ export const login = async (
     }
   }
 
-  try {
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
-    });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin": {
-          return { error: "Invalid credentials" };
-        }
-        default: {
-          return { error: "Something went wrong!" };
-        }
-      }
-    }
+  // Sign in the user
+  const result = await signIn("credentials", {
+    redirect: false,
+    email: values.email,
+    password: values.password,
+    callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+  });
 
-    throw error;
+  if (result?.error) {
+    return { error: result.error };
   }
+
+  return { success: true, url: result?.url };
 };
