@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import authConfig from "@/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { UserRole } from "@prisma/client";
@@ -12,7 +13,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   ...authConfig,
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user, account }: any) {
       console.log("[auth.ts:27] user", user);
       console.log("[auth.ts:28] account", account);
 
@@ -55,7 +56,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       signIn: "/auth/login",
       error: "/auth/error",
     },
-    async linkAccount({ user }) {
+    async linkAccount({ user }: any) {
       await db.user.update({
         where: {
           id: user.id,
@@ -65,7 +66,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         },
       });
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       console.log("[auth.ts:92] token", token);
       console.log("[auth.ts:93] session", session);
 
@@ -92,7 +93,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       return session;
     },
-    async jwt({ token }) {
+    async jwt({ token }: any) {
       // Check if token is being created
       if (!token.sub) {
         return token;
